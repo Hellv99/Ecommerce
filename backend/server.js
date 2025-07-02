@@ -1,4 +1,4 @@
-import express, { request, response } from "express";
+import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
@@ -10,7 +10,7 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.error(err));
 
-app.get("/", (request, response) => {
+app.get("/", (req, res) => {
   response.send("API Running");
 });
 
