@@ -1,11 +1,18 @@
-const express = require("express");
+import express, { request, response } from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+
+dotenv.config();
 const app = express();
-const port = 5000;
 
-app.get("/", (req, res) => {
-  res.send("Hello from the backend!");
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error(err));
+
+app.get("/", (request, response) => {
+  response.send("API Running");
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`App listening on port ${PORT}`));
