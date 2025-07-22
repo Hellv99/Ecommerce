@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const orderItemSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  qty: { type: Number, required: true },
+  qty: { type: Number, default: 1, required: true },
   imageUrl: { type: String, required: true },
   price: { type: Number, required: true },
   product: {
@@ -78,4 +78,5 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("Order", orderSchema);
+const Order = mongoose.model("Order", orderSchema);
+export default Order;
