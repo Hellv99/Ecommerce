@@ -63,8 +63,7 @@ export const login = async (req, res) => {
     }
     // Generate JWT token
     const payload = { user: { id: user.id } };
-    console.log("JWT_SECRET value before signing:", process.env.JWT_SECRET);
-    // ... then your jwt.sign() call ...
+
     jwt.sign(
       payload,
       process.env.JWT_SECRET,

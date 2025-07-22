@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema(
       minlength: [6, "Password must be at least 6 characters long"],
       select: false, // This will prevent the password from being returned in queries by default
     },
+    isAdmin: {
+      type: Boolean,
+      default: false, // By default, users are not admins
+    },
   },
   {
     timestamps: true, // Automatically adds createdAt and updatedAt fields

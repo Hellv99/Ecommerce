@@ -1,9 +1,9 @@
 import express from "express";
-import authMiddleware from "../middleware/authMiddleware.js";
+import { auth } from "../middleware/authMiddleware.js";
 import User from "../model/user.js";
 const router = express.Router();
 
-router.get("/me", authMiddleware, async (req, res) => {
+router.get("/me", auth, async (req, res) => {
   try {
     // Fetch the user from the database using the ID from the token
     const user = await User.findById(req.user.id).select("-password");
