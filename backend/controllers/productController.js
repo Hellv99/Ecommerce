@@ -27,17 +27,6 @@ export const createProduct = async (req, res) => {
   }
 };
 
-// Get all products
-export const getProducts = async (req, res) => {
-  try {
-    const products = await Product.find();
-    res.status(200).json({ success: true, data: products });
-  } catch (error) {
-    console.error("Error in getting products", error.message);
-    res.status(500).json({ success: false, message: "Server Error" });
-  }
-};
-
 // Get a product by ID
 export const getProductById = async (req, res) => {
   const { id } = req.params;
@@ -88,5 +77,53 @@ export const deleteProduct = async (req, res) => {
   } catch (error) {
     console.error("Error in deleting product", error.message);
     res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
+export const getProducts = async (req, res) => {
+  try {
+    const pagesize = parseInt(req.query.limit) || 10; //default 10 items per page
+    const page = parseInt(req.query.page) || 1; //default to first page
+    const keywords = req.query.keywords
+      ? {
+          name: {
+            $regex: req.query.keywords,
+            $options: "i", // case-insensitive search
+          },
+        }
+      : {};
+
+    const category = req.query.category ? { category: req.query.category } : {};
+    //price range filtering
+    const priceFilter = {};
+    if (req.query.minPrice) {
+      priceFilter.price = {
+        ...priceFilter.price,
+        $gte: parseFloat(req.query.minPrice),
+      };
+      if (req.query.maxPrice) {
+        priceFilter.price = {
+          ...priceFilter.price,
+          $lte: parseFloat(req.query.maxPrice),
+        };
+      }
+    }
+
+    //combine all filters
+    const filter = { ...keywords, ...category, ...priceFilter };
+
+    const count = await Product.countDocuments(filter);
+    const products = await Product.find(filter)
+      .limit(pagesize)
+      .skip(pagesize * (page - 1));
+    res.json({
+      products,
+      page,
+      pages: Math.ceil(count / pagesize),
+      totalProducts: count,
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
   }
 };
