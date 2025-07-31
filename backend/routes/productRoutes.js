@@ -5,6 +5,7 @@ import {
   updateProduct,
   deleteProduct,
   getProducts,
+  createProductReview,
 } from "../controllers/productController.js";
 import { auth, admin } from "../middleware/authMiddleware.js";
 import upload from "../middleware/uploadMiddleware.js";
@@ -14,10 +15,7 @@ const router = express.Router();
 router.get("/", getProducts);
 router.get("/:id", getProductById);
 
-//admin only
-router.post("/", auth, admin, createProduct);
-router.put("/:id", auth, admin, updateProduct);
-router.delete("/:id", auth, admin, deleteProduct);
+router.route("/:id/reviews").post(auth, createProductReview);
 
 //@route  POST /api/products/upload
 // @desc  Upload product image
@@ -49,4 +47,10 @@ router.post(
   }
 );
 
+router.route("/").post(auth, admin, createProduct);
+
+//admin only
+router.post("/", auth, admin, createProduct);
+router.put("/:id", auth, admin, updateProduct);
+router.delete("/:id", auth, admin, deleteProduct);
 export default router;

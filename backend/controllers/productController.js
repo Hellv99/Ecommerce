@@ -1,4 +1,5 @@
 import Product from "../model/productModel.js";
+import Order from "../model/orderModel.js";
 
 // Existing createProduct function
 export const createProduct = async (req, res) => {
@@ -125,5 +126,65 @@ export const getProducts = async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
+  }
+};
+
+export const createProductReview = async (req, res) => {
+  const { rating, comment } = req.body;
+  const productId = req.params.id;
+
+  try {
+    const product = await Product.findById(productId);
+    if (product) {
+      //check if user already reviewed the product
+      const alreadyReviewed = product.reviews.find(
+        (r) => r.user.toString() === req.user.id.toString()
+      );
+      if (alreadyReviewed) {
+        return res.status(400).json({ message: "Product already reviewed" });
+      }
+      const userOrders = await Order.find({
+        user: req.user.id,
+      });
+
+      const hasPurchased = userOrders.some((order) =>
+        order.orderItems.some(
+          (item) => item.product.toString() === productId.toString()
+        )
+      );
+      if (!hasPurchased) {
+        return res
+          .status(403)
+          .json({ message: "You must purchase the product before reviewing" });
+      }
+
+      const review = {
+        name: req.user.name,
+        rating: Number(rating),
+        comment,
+        user: req.user.id,
+      };
+
+      product.reviews.push(review);
+      product.numReviews = product.reviews.length;
+      product.rating =
+        product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+        product.numReviews;
+      // Calculate new average rating
+      product.rating =
+        product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+        product.reviews.length;
+
+      await product.save();
+      res.status(201).json({ message: "Review added" });
+    } else {
+      res.status(404).json({ message: "Product not found" });
+    }
+  } catch (error) {
+    console.error(error.message);
+    if (error.kind === "ObjectId") {
+      return res.status(400).json({ message: "Invalid Product ID" });
+    }
+    res.status(500).send("Server error");
   }
 };
