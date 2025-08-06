@@ -5,6 +5,7 @@ import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
 import path from "path";
 
 dotenv.config();
@@ -23,6 +24,8 @@ app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 
 app.use("/api/orders", orderRoutes);
+
+app.use("/api/payments", paymentRoutes);
 
 app.listen(5000, () => {
   connectDB();
