@@ -5,6 +5,7 @@ import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import { errorHandler } from "./middleware/errorMiddleware.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import path from "path";
 
@@ -26,6 +27,7 @@ app.use("/api/orders", orderRoutes);
 
 app.use("/api/payments", paymentRoutes);
 
+app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 connectDB()
   .then(() => {
