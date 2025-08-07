@@ -1,5 +1,5 @@
 import express from "express";
-import dotenv from "dotenv";
+import "dotenv/config";
 import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
@@ -8,7 +8,6 @@ import orderRoutes from "./routes/orderRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import path from "path";
 
-dotenv.config();
 const app = express();
 
 app.use(express.json());
@@ -27,7 +26,14 @@ app.use("/api/orders", orderRoutes);
 
 app.use("/api/payments", paymentRoutes);
 
-app.listen(5000, () => {
-  connectDB();
-  console.log(`App listening on at http://localhost:5000`);
-});
+const PORT = process.env.PORT || 5000;
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`App listening on at http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to connect to DB", err);
+    process.exit(1);
+  });
