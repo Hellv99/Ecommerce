@@ -4,16 +4,17 @@ import ProductCard from "./ProductCard.jsx";
 
 const HomeScreen = () => {
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState([true]);
-  const [error, setError] = useState([null]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const { data } = await axios.get("/api/products");
-        setProducts(data);
+        setProducts(data.products);
         setLoading(false);
       } catch (err) {
+        console.error(err);
         setError("Failed to fetch produts. Please try again later.");
         setLoading(false);
       }

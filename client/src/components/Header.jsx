@@ -29,7 +29,7 @@ const Header = () => {
           </form>
         </div>
         {/*nav */}
-        <nav className="flex items-center space-x-6">
+        <nav className="flex items-center space-x-6 ">
           <Link
             to="/"
             className="text-gray-600 hover:text-[#88c8bc] transition-colors duration-200"

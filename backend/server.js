@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import "dotenv/config";
 import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
@@ -12,9 +13,11 @@ import path from "path";
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 //make uploads folder publicly accessible
 const __dirname = path.resolve();
+
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/api/auth", authRoutes);

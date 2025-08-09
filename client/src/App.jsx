@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Routes, Router } from "react-router-dom";
 import Header from "./components/Header.jsx";
 import HomeScreen from "./components/HomeScreen.jsx";
+import ProductDetailScreen from "./screens/ProductDetailScreen.jsx";
 
 const App = () => {
   return (
@@ -9,9 +10,7 @@ const App = () => {
       <Header />
       <Routes>
         <Route path="/" element={<HomeScreen />} />
-        <Route path="/" element={<HomeScreen />} />
-        <Route path="/" element={<HomeScreen />} />
-        <Route path="/" element={<HomeScreen />} />
+        <Route path="/products/:id" element={<ProductDetailScreen />} />
       </Routes>
     </>
   );
