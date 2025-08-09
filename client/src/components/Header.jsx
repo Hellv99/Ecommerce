@@ -87,7 +87,6 @@ const Header = () => {
                 Sign In
               </Link>
             )}
-
             {/* Search Form (I've moved this to be more responsive with the user links) */}
             <form className="flex items-center ml-4">
               <input
@@ -101,7 +100,13 @@ const Header = () => {
               >
                 search
               </button>
-            </form>
+            </form>{" "}
+            <Link
+              to="/cart"
+              className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
+            >
+              Cart
+            </Link>
           </div>
         </div>
       </header>
