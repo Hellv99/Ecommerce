@@ -1,7 +1,27 @@
-import React from "react";
-import { Link } from "react-router-dom";
+// src/components/Header.jsx
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const [userInfo, setUserInfo] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUserInfo = localStorage.getItem("userInfo");
+    if (storedUserInfo) {
+      setUserInfo(JSON.parse(storedUserInfo));
+    } else {
+      setUserInfo(null);
+    }
+  }, []);
+
+  const logoutHandler = () => {
+    localStorage.removeItem("userInfo");
+    setUserInfo(null);
+    navigate("/");
+    window.location.reload();
+  };
+
   return (
     <>
       <header className="bg-white shadow-md">
@@ -44,13 +64,36 @@ const Header = () => {
             </Link>
           </nav>
 
-          {/* Search functionality on the right */}
-          <div className="flex items-center">
-            <form className="flex items-center">
+          {/* User/Search functionality on the right */}
+          <div className="flex items-center space-x-4">
+            {/* Conditional Rendering for User */}
+            {userInfo ? (
+              <div className="flex items-center space-x-2">
+                <span className="text-gray-800 font-semibold">
+                  {userInfo.name}
+                </span>
+                <button
+                  onClick={logoutHandler}
+                  className="text-gray-600 hover:text-red-500 transition-colors duration-200 font-semibold"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="px-4 py-2 text-white bg-[#88c8bc] rounded-md hover:bg-[#72af9a] font-semibold"
+              >
+                Sign In
+              </Link>
+            )}
+
+            {/* Search Form (I've moved this to be more responsive with the user links) */}
+            <form className="flex items-center ml-4">
               <input
                 type="text"
                 placeholder="Search"
-                className="px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-[#88c8bc]"
+                className="px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-[#88c8bc] w-32 md:w-auto"
               />
               <button
                 type="submit"
